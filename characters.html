@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персонажи Гравити Фолз | Фан-сайт</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Walter+Turncoat&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Стили для страницы персонажей */
+        .characters-hero {
+            background: linear-gradient(rgba(20, 58, 146, 0.9), rgba(69, 9, 232, 0.9)), url('images/characters-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+            margin-bottom: 3rem;
+        }
+
+        .characters-hero h1 {
+            font-family: 'Walter Turncoat', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .characters-hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .characters-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        /* Стили для карточки персонажа */
+        .character-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .character-image-container {
+            flex: 0 0 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            cursor: pointer;
+        }
+
+        .character-image-container:hover .character-main-image {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 82, 118, 0.8);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .character-image-container:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .character-info {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .character-name {
+            color: #1a5276;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Walter Turncoat', cursive;
+            border-bottom: 3px solid #f1c40f;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .character-role {
+            color: #f1c40f;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .character-description {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .character-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trait {
+            background: #e8f4fd;
+            color: #1a5276;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .character-details {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #1a5276;
+            display: inline-block;
+            width: 120px;
+        }
+
+        /* Модальное окно для фото */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90vh;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+        }
+
+        .modal-nav button {
+            background: rgba(26, 82, 118, 0.8);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-nav button:hover {
+            background: rgba(241, 196, 15, 0.8);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #f1c40f;
+        }
+
+        .modal-info {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Миниатюры в модальном окне */
+        .modal-thumbnails {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .modal-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s ease;
+        }
+
+        .modal-thumbnail.active {
+            border-color: #f1c40f;
+        }
+
+        .modal-thumbnail:hover {
+            border-color: white;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .character-card {
+                flex-direction: column;
+            }
+            
+            .character-image-container {
+                flex: 0 0 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .characters-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .character-name {
+                font-size: 1.8rem;
+            }
+            
+            .character-image-container {
+                flex: 0 0 300px;
+            }
+            
+            .modal-nav button {
+                padding: 10px 15px;
+                font-size: 1.2rem;
+            }
+            
+            .modal-thumbnail {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .character-info {
+                padding: 1.5rem;
+            }
+            
+            .character-name {
+                font-size: 1.5rem;
+            }
+            
+            .character-image-container {
+                flex: 0 0 250px;
+            }
+            
+            .trait {
+                font-size: 0.8rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Гравити Фолз">
+            </a>
+            <nav>
+                
+                <ul class="nav-list">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="characters.html">Персонажи</a></li>
+                    <li><a href="quiz_character.html">Кто ты из ГФ?</a></li>
+                    <li><a href="quiz_knowledge.html">Тест на знание</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="characters-hero">
+            <div class="container">
+                <h1>Персонажи Гравити Фолз</h1>
+                <p>Познакомься со всеми удивительными и загадочными обитателями этого странного городка!</p>
+            </div>
+        </section>
+
+        <div class="characters-container">
+            <!-- Диппер Пайнс -->
+            <div class="character-card" id="dipper">
+                <div class="character-image-container">
+                    <img src="images/диппер.jpg" alt="Диппер Пайнс" class="character-main-image" onclick="openModal('dipper', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Диппер Пайнс</h2>
+                    <div class="character-role">Главный герой, исследователь тайн</div>
+                    <p class="character-description">
+                        Мейсон "Диппер" Пайнс — 12-летний мальчик, проводящий лето со своей сестрой-близнецом Мейбл у своего двоюродного дедушки Стэна в Гравити Фолз. 
+                        Любознательный, умный и одержимый разгадкой тайн городка. Носит синюю бейсболку с символом "Большой ковш", под которой скрывается родимое пятно в виде того же созвездия. 
+                        Находит Дневник №3, который становится его руководством по исследованию паранормальных явлений Гравити Фолз.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Любознательный</span>
+                        <span class="trait">Храбрый</span>
+                        <span class="trait">Преданный</span>
+                        <span class="trait">Умный</span>
+                        <span class="trait">Ответственный</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> 12 лет</div>
+                        <div class="detail-item"><span class="detail-label">Род занятий:</span> Исследователь тайн</div>
+                        <div class="detail-item"><span class="detail-label">Родственники:</span> Мейбл (сестра), Стэн и Форд (дяди)</div>
+                        <div class="detail-item"><span class="detail-label">Особенность:</span> Родимое пятно в виде Большой Медведицы</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Мейбл Пайнс -->
+            <div class="character-card" id="mabel">
+                <div class="character-image-container">
+                    <img src="images/мэйбл.jpg" alt="Мейбл Пайнс" class="character-main-image" onclick="openModal('mabel', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Мейбл Пайнс</h2>
+                    <div class="character-role">Оптимистка, мастерица, сестра-близнец</div>
+                    <p class="character-description">
+                        Мейбл Пайнс — жизнерадостная, эксцентричная и оптимистичная сестра-близнец Диппера. Ей 12 лет, и она обожает свитеры с необычными рисунками, единорогов, 
+                        глиттер и всё радужное. Несмотря на свою легкомысленность, Мейбл обладает большим сердцем, творческими способностями и невероятной преданностью своей семье. 
+                        Её девиз — "Всё будет здорово!", и она действительно верит в это.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Оптимистичная</span>
+                        <span class="trait">Творческая</span>
+                        <span class="trait">Энергичная</span>
+                        <span class="trait">Доброжелательная</span>
+                        <span class="trait">Романтичная</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> 12 лет</div>
+                        <div class="detail-item"><span class="detail-label">Хобби:</span> Вязание свитеров, коллекционирование всего необычного</div>
+                        <div class="detail-item"><span class="detail-label">Питомец:</span> Свинотролль Пухля</div>
+                        <div class="detail-item"><span class="detail-label">Особенность:</span> Меняет свитер каждый день</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Стэнли "Стэн" Пайнс -->
+            <div class="character-card" id="stan">
+                <div class="character-image-container">
+                    <img src="images/стэн.jpg" alt="Дядя Стэн" class="character-main-image" onclick="openModal('stan', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Стэнли "Стэн" Пайнс</h2>
+                    <div class="character-role">Владелец Хижины Чудовищ, дядя</div>
+                    <p class="character-description">
+                        Стэнли Пайнс — жадный, циничный и вечно недовольный владелец туристической ловушки "Хижина Чудовищ". 
+                        Под маской сварливого старика скрывается человек с трудной судьбой и большим сердцем. Провёл 30 лет, работая над возвращением своего брата-близнеца из другого измерения. 
+                        Мастер афер и обмана, но глубоко внутри заботится о своей семье.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Хитрый</span>
+                        <span class="trait">Практичный</span>
+                        <span class="trait">Сварливый</span>
+                        <span class="trait">Преданный семье</span>
+                        <span class="trait">Решительный</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> около 70 лет</div>
+                        <div class="detail-item"><span class="detail-label">Род занятий:</span> Владелец Хижины Чудовищ</div>
+                        <div class="detail-item"><span class="detail-label">Брат-близнец:</span> Стэнфорд Пайнс</div>
+                        <div class="detail-label">Девиз:</span> "Доверяй, но проверяй!"</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Стэнфорд "Форд" Пайнс -->
+            <div class="character-card" id="ford">
+                <div class="character-image-container">
+                    <img src="images/форд.jpg" alt="Дядя Форд" class="character-main-image" onclick="openModal('ford', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Стэнфорд "Форд" Пайнс</h2>
+                    <div class="character-role">Учёный, исследователь, автор дневников</div>
+                    <p class="character-description">
+                        Стэнфорд Пайнс — гениальный учёный с шестью пальцами на каждой руке, автор трёх дневников о паранормальных явлениях Гравити Фолз. 
+                        Провёл 30 лет в параллельных измерениях, изучая их природу. Обладает невероятным интеллектом, но часто бывает социально неловким. 
+                        Построил портал в другое измерение, что привело к многим событиям сериала.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Гениальный</span>
+                        <span class="trait">Любознательный</span>
+                        <span class="trait">Сосредоточенный</span>
+                        <span class="trait">Осторожный</span>
+                        <span class="trait">Преданный науке</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> около 70 лет</div>
+                        <div class="detail-item"><span class="detail-label">Образование:</span> Доктор философии</div>
+                        <div class="detail-item"><span class="detail-label">Особенность:</span> 6 пальцев на каждой руке</div>
+                        <div class="detail-item"><span class="detail-label">Изобретение:</span> Портал в другие измерения</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Зус Рамирес -->
+            <div class="character-card" id="soos">
+                <div class="character-image-container">
+                    <img src="images/зус.png" alt="Зус" class="character-main-image" onclick="openModal('soos', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Зус Рамирес</h2>
+                    <div class="character-role">Помощник в Хижине Чудовищ, лучший друг</div>
+                    <p class="character-description">
+                        Зус — 22-летний добродушный, немного наивный, но бесконечно преданный помощник в Хижине Чудовищ. Обожает видеоигры, сэндвичи и считает Стэна своим героем. 
+                        Несмотря на свою неуклюжесть, он мастер на все руки и всегда готов помочь. В будущем становится новым мистером Загадочностью.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Добрый</span>
+                        <span class="trait">Верный</span>
+                        <span class="trait">Оптимистичный</span>
+                        <span class="trait">Практичный</span>
+                        <span class="trait">Наивный</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> 22 года</div>
+                        <div class="detail-item"><span class="detail-label">Род занятий:</span> Помощник/менеджер Хижины Чудовищ</div>
+                        <div class="detail-item"><span class="detail-label">Хобби:</span> Видеоигры, ремонт техники</div>
+                        <div class="detail-item"><span class="detail-label">Мечта:</span> Стать мистером Загадочностью</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Венди Кордрой -->
+            <div class="character-card" id="wendy">
+                <div class="character-image-container">
+                    <img src="images/венди.png" alt="Венди" class="character-main-image" onclick="openModal('wendy', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Венди Кордрой</h2>
+                    <div class="character-role">Работница Хижины Чудовищ, подруга Диппера</div>
+                    <p class="character-description">
+                        Венди — 15-летняя крутая, независимая и саркастичная работница Хижины Чудовищ. Носит фланелевую рубашку и обожает приключения. 
+                        Диппер в неё влюблён, но она видит в нём только младшего друга. Приходится из самой известной в городе семьи лесорубов.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Крутая</span>
+                        <span class="trait">Независимая</span>
+                        <span class="trait">Саркастичная</span>
+                        <span class="trait">Верная</span>
+                        <span class="trait">Авантюрная</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Возраст:</span> 15 лет</div>
+                        <div class="detail-item"><span class="detail-label">Род занятий:</span> Работница Хижины Чудовищ</div>
+                        <div class="detail-item"><span class="detail-label">Семья:</span> Кордрой (семья лесорубов)</div>
+                        <div class="detail-item"><span class="detail-label">Хобби:</span> Походы, приключения</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Билл Шифр -->
+            <div class="character-card" id="bill">
+                <div class="character-image-container">
+                    <img src="images/билл.jpg" alt="Билл Шифр" class="character-main-image" onclick="openModal('bill', 0)">
+                    <div class="image-overlay">Нажми, чтобы посмотреть все фото</div>
+                </div>
+                <div class="character-info">
+                    <h2 class="character-name">Билл Шифр</h2>
+                    <div class="character-role">Демон, главный антагонист</div>
+                    <p class="character-description">
+                        Билл Шифр — древний межпространственный демон, стремящийся к полному уничтожению реальности. 
+                        Появляется в виде гигантского глаза с цилиндром и галстуком-бабочкой. Обладает невероятной силой, манипулирует сознанием и заключает сделки. 
+                        Главный антагонист сериала, устроивший Странногеддон.
+                    </p>
+                    <div class="character-traits">
+                        <span class="trait">Манипулятор</span>
+                        <span class="trait">Могущественный</span>
+                        <span class="trait">Хаотичный</span>
+                        <span class="trait">Коварный</span>
+                        <span class="trait">Безумный</span>
+                    </div>
+                    <div class="character-details">
+                        <div class="detail-item"><span class="detail-label">Сущность:</span> Межпространственный демон</div>
+                        <div class="detail-item"><span class="detail-label">Цель:</span> Уничтожение реальности</div>
+                        <div class="detail-item"><span class="detail-label">Известная фраза:</span> "Помни, реальность — это иллюзия, вселенная — голограмма, покупай золото!"</div>
+                        <div class="detail-item"><span class="detail-label">Особенность:</span> Может вселяться в разумы</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Добавь остальных персонажей по аналогии -->
+            <!-- Всего 15 персонажей (продолжи по такому же шаблону) -->
+
+        </div>
+
+        <!-- Модальное окно для просмотра фото -->
+        <div id="imageModal" class="modal">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-nav">
+                <button onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
+                <button onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <img class="modal-content" id="modalImage">
+            <div class="modal-thumbnails" id="modalThumbnails"></div>
+            <div class="modal-info" id="modalInfo"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Фан-сайт по мотивам мультсериала "Гравити Фолз". Все права принадлежат их законным владельцам.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Данные для фотографий персонажей
+        const characterImages = {
+            dipper: [
+                { src: 'images/dipper-main.jpg', alt: 'Диппер с кепкой', desc: 'Диппер в своей фирменной кепке' },
+                { src: 'images/dipper-2.jpg', alt: 'Диппер с дневником', desc: 'Диппер изучает Дневник №3' },
+                { src: 'images/dipper-3.jpg', alt: 'Диппер серьезный', desc: 'Диппер в раздумьях' }
+            ],
+            mabel: [
+                { src: 'images/mabel-main.jpg', alt: 'Мейбл улыбается', desc: 'Мейбл в своем лучшем свитере' },
+                { src: 'images/mabel-2.jpg', alt: 'Мейбл с Пухлей', desc: 'Мейбл со своим свинотроллем' },
+                { src: 'images/mabel-3.jpg', alt: 'Мейбл творческая', desc: 'Мейбл занимается рукоделием' }
+            ],
+            stan: [
+                { src: 'images/stan-main.jpg', alt: 'Дядя Стэн', desc: 'Стэн у Хижины Чудовищ' },
+                { src: 'images/stan-2.jpg', alt: 'Стэн смеется', desc: 'Стэн довольный' },
+                { src: 'images/stan-3.jpg', alt: 'Стэн серьезный', desc: 'Стэн в раздумьях' }
+            ],
+            ford: [
+                { src: 'images/ford-main.jpg', alt: 'Дядя Форд', desc: 'Форд в лаборатории' },
+                { src: 'images/ford-2.jpg', alt: 'Форд с шестью пальцами', desc: 'Форд показывает свои шесть пальцев' },
+                { src: 'images/ford-3.jpg', alt: 'Форд ученый', desc: 'Форд за исследованиями' }
+            ],
+            soos: [
+                { src: 'images/soos-main.jpg', alt: 'Зус улыбается', desc: 'Зус всегда в хорошем настроении' },
+                { src: 'images/soos-2.jpg', alt: 'Зус с инструментами', desc: 'Зус - мастер на все руки' },
+                { src: 'images/soos-3.jpg', alt: 'Зус смеется', desc: 'Зус заразительно смеется' }
+            ],
+            wendy: [
+                { src: 'images/wendy-main.jpg', alt: 'Венди крутая', desc: 'Венди в своей фирменной фланелевой рубашке' },
+                { src: 'images/wendy-2.jpg', alt: 'Венди с топором', desc: 'Венди - настоящая лесорубка' },
+                { src: 'images/wendy-3.jpg', alt: 'Венди улыбается', desc: 'Редкая улыбка Венди' }
+            ],
+            bill: [
+                { src: 'images/bill-main.jpg', alt: 'Билл Шифр', desc: 'Билл в своей классической форме' },
+                { src: 'images/bill-2.jpg', alt: 'Билл злой', desc: 'Билл показывает свою истинную сущность' },
+                { src: 'images/bill-3.jpg', alt: 'Билл в сделке', desc: 'Билл заключает очередную сделку' }
+            ]
+            // Добавь изображения для остальных персонажей
+        };
+
+        // Переменные для управления модальным окном
+        let currentCharacter = '';
+        let currentImageIndex = 0;
+
+        // Открытие модального окна
+        function openModal(characterId, index) {
+            currentCharacter = characterId;
+            currentImageIndex = index;
+            
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalInfo = document.getElementById('modalInfo');
+            const modalThumbnails = document.getElementById('modalThumbnails');
+            
+            const images = characterImages[characterId];
+            
+            // Устанавливаем основное изображение
+            modalImage.src = images[index].src;
+            modalImage.alt = images[index].alt;
+            
+            // Устанавливаем описание
+            modalInfo.textContent = images[index].desc;
+            
+            // Создаем миниатюры
+            modalThumbnails.innerHTML = '';
+            images.forEach((img, i) => {
+                const thumbnail = document.createElement('img');
+                thumbnail.src = img.src;
+                thumbnail.alt = img.alt;
+                thumbnail.className = 'modal-thumbnail';
+                if (i === index) {
+                    thumbnail.classList.add('active');
+                }
+                thumbnail.onclick = () => {
+                    currentImageIndex = i;
+                    updateModal();
+                };
+                modalThumbnails.appendChild(thumbnail);
+            });
+            
+            // Показываем модальное окно
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
+        }
+
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Возвращаем скролл
+        }
+
+        // Следующее изображение
+        function nextImage() {
+            const images = characterImages[currentCharacter];
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            updateModal();
+        }
+
+        // Предыдущее изображение
+        function prevImage() {
+            const images = characterImages[currentCharacter];
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            updateModal();
+        }
+
+        // Обновление модального окна
+        function updateModal() {
+            const images = characterImages[currentCharacter];
+            const modalImage = document.getElementById('modalImage');
+            const modalInfo = document.getElementById('modalInfo');
+            const thumbnails = document.querySelectorAll('.modal-thumbnail');
+            
+            modalImage.src = images[currentImageIndex].src;
+            modalImage.alt = images[currentImageIndex].alt;
+            modalInfo.textContent = images[currentImageIndex].desc;
+            
+            // Обновляем активную миниатюру
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === currentImageIndex);
+            });
+        }
+
+        // Закрытие модального окна при клике вне изображения
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Закрытие модального окна по клавише Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            if (event.key === 'ArrowRight') {
+                nextImage();
+            }
+            if (event.key === 'ArrowLeft') {
+                prevImage();
+            }
+        });
+
+        // Для изображений-заглушек (если реальных изображений нет)
+        document.querySelectorAll('.character-main-image').forEach(img => {
+            img.onerror = function() {
+                // Если изображение не загрузилось, ставим заглушку с именем персонажа
+                const characterName = this.alt.split(' ')[0];
+                this.src = `https://via.placeholder.com/400x500/1a5276/ffffff?text=${characterName}`;
+            };
+        });
+    </script>
+</body>
+</html>

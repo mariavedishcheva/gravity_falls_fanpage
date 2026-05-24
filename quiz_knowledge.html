@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест на знание Гравити Фолз | Фан-сайт</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Walter+Turncoat&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Дополнительные стили для теста */
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .quiz-progress {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            background: #f1c40f;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            color: #1a5276;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-family: 'Walter Turncoat', cursive;
+        }
+
+        .answers-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .answer-option:hover {
+            background: #e9ecef;
+            border-color: #1a5276;
+        }
+
+        .answer-option.selected {
+            background: #1a5276;
+            color: white;
+            border-color: #1a5276;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-btn {
+            background: #f1c40f;
+            color: #1a5276;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .quiz-btn:hover:not(:disabled) {
+            background: #e67e22;
+        }
+
+        .quiz-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-title {
+            color: #1a5276;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-family: 'Walter Turncoat', cursive;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 1rem 0;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .restart-btn {
+            background: #1a5276;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: #154360;
+        }
+
+        .correct-answer {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .user-answer {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Гравити Фолз">
+            </a>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="characters.html">Персонажи</a></li>
+                    <li><a href="quiz_character.html">Кто ты из ГФ?</a></li>
+                    <li><a href="quiz_knowledge.html">Тест на знание</a></li>
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Тест на знание Гравити Фолз</h1>
+                <p>Проверь, насколько хорошо ты знаешь тайны этого загадочного городка!</p>
+            </div>
+        </section>
+
+        <div class="quiz-container">
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="progressBar"></div>
+            </div>
+
+            <div id="quizContent"> </div>
+
+            <div class="quiz-navigation">
+                <button class="quiz-btn" id="prevBtn" disabled>← Назад</button>
+                <span id="questionCounter">Вопрос 1 из 10</span>
+                <button class="quiz-btn" id="nextBtn">Далее →</button>
+                <button class="quiz-btn" id="submitBtn" style="display: none;">Узнать результат!</button>
+            </div>
+
+            <div class="result-container" id="resultContainer"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Фан-сайт по мотивам мультсериала "Гравити Фолз". Все права принадлежат их законным владельцам.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/quiz_know.js"></script>
+</body>
+</html>
